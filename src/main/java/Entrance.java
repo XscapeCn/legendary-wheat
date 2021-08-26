@@ -5,33 +5,138 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
+import java.io.File;
 
-public class Entrance {
+import app.*;
 
-    public static void main(String[] args) {
-//        MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+
+
+
+public class Entrance{
+    Options options = new Options();
+    HelpFormatter optionFormat = new HelpFormatter();
+    String introduction = this.createIntroduction();
+    String app = null;
+    String parameterPath = null;
+    String parameters = null;
+
+    String inputFile = null;
+    String outputFileDirS=null;
+    String sampleInformationFileS = null;
+    String library = null;
+    String GTFDir = null;
+    String QCmethod = null;
+    String readsNumber = null;
+
+    public Entrance (String[] args) {
         String uri = "mongodb://localhost:27017";
         try (MongoClient mongoClient = MongoClients.create(uri)) {
-            MongoDatabase database = mongoClient.getDatabase("test");
-            MongoCollection<Document> collection = database.getCollection("new");
+            MongoDatabase db = mongoClient.getDatabase("test");
+            MongoCollection<Document> collection = db.getCollection("new");
             Document doc = collection.find().first();
-//            if (doc != null) {
-//                System.out.println("_id: " + doc.getObjectId("_id")
-//                        + ", name: " + doc.getString("name")
-//                        + ", dateOfDeath: " + doc.getDate("dateOfDeath"));
-//                doc.getList("novels", Document.class).forEach((novel) -> {
-//                    System.out.println("title: " + novel.getString("title")
-//                            + ", yearPublished: " + novel.getInteger("yearPublished"));
-//                });
-//            }
-            System.out.println(doc.toJson());
 
 
+            this.createOptions();
+            this.retrieveParameters (args, db);
 
-//            Bson filter = Filters.and(Filters.gt("qty", 3), Filters.lt("qty", 9));
-//            collection.find(filter).forEach(doc -> System.out.println(doc.toJson()));
         }
+
+
     }
+
+    public void createOptions() {
+        options = new Options();
+        options.addOption("a", true, "App. e.g. -a Parsing");
+        options.addOption("f", true, "Parameter file path of an app. e.g. parameter_Alignment.txt");
+        options.addOption("i", true, "-inputFile /User/bin/");
+        options.addOption("o", true, "-outputFileDirS /User/bin/");
+        options.addOption("s", true, "-sampleInformationFileS /User/bin/");
+        options.addOption("l", true, "-library /User/bin/");
+        options.addOption("app", true, "-anno /User/bin/");
+        options.addOption("t", true, "-t 32");
+        options.addOption("m",true,"method mean or median");
+        options.addOption("r",true,"readsNumber");
+    }
+
+
+    public void retrieveParameters(String[] args, MongoDatabase database) {
+        CommandLineParser parser = new DefaultParser();
+        try {
+            CommandLine line = parser.parse(options, args);
+            app = line.getOptionValue("a");
+
+            if( line.hasOption( "i" ) ) {
+                inputFile =line.getOptionValue("i");
+            }
+
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+        if (app == null) {
+            System.out.println("App does not exist");
+            this.printIntroductionAndUsage();
+            System.exit(0);
+        }
+        if (app.equals(AppNames.ShowVars.getName())) {
+            String[] news = {this.inputFile, this.outputFileDirS, this.sampleInformationFileS, this.library};
+            new ShowVars();
+        }
+        else if (app.equals(AppNames.ShowColl.getName())) {
+            String[] news ={this.inputFile,this.outputFileDirS,this.QCmethod,this.readsNumber};
+            new ShowColl(database);
+        }
+        else if (app.equals(AppNames.Download.getName())) {
+            String[] news ={this.inputFile,this.outputFileDirS,this.QCmethod,this.readsNumber};
+            new Download();
+        }
+        else {
+            System.out.println("App does not exist");
+            this.printIntroductionAndUsage();
+            System.exit(0);
+        }
+
+    }
+
+    public void printIntroductionAndUsage() {
+        System.out.println("Incorrect options input. Program stops.");
+        System.out.println(introduction);
+    }
+
+    public String createIntroduction() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nLegendary-wheat is designed to make wheat germplasm contraction easier.\n");
+        sb.append("It uses two options to run its apps. \"-a\" is used to select an app. \"-f\" is used to provide a parameter file of an app.\n");
+        sb.append("e.g. The basic function of it shows below: ");
+        sb.append("java -Xmx100g -jar SiPAS-tools.jar -a Parsing -f parameter_parsing.txt > log.txt &\n");
+        sb.append("\nAvailable apps in SiPAS-tools include,\n");
+        for (int i = 0; i < AppNames.values().length; i++) {
+            sb.append(AppNames.values()[i].getName()).append("\n");
+        }
+        sb.append("\nPlease visit https://github.com/PlantGeneticsLab/SiPAS-tools for details.\n");
+        return sb.toString();
+    }
+
+    public static void main (String[] args) {
+
+        new Entrance(args);
+    }
+
 }
+
+
+
+
+
+
+
+
+
 
 
