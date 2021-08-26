@@ -18,6 +18,10 @@ import org.apache.commons.cli.Options;
 
 
 public class Entrance{
+    String collection = null;
+
+
+
     Options options = new Options();
     HelpFormatter optionFormat = new HelpFormatter();
     String introduction = this.createIntroduction();
@@ -38,6 +42,7 @@ public class Entrance{
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase db = mongoClient.getDatabase("test");
             MongoCollection<Document> collection = db.getCollection("new");
+
             Document doc = collection.find().first();
 
 
@@ -52,6 +57,7 @@ public class Entrance{
     public void createOptions() {
         options = new Options();
         options.addOption("a", true, "App. e.g. -a Parsing");
+        options.addOption("c", true, "collection. e.g. -c germplasm");
         options.addOption("f", true, "Parameter file path of an app. e.g. parameter_Alignment.txt");
         options.addOption("i", true, "-inputFile /User/bin/");
         options.addOption("o", true, "-outputFileDirS /User/bin/");
@@ -64,7 +70,7 @@ public class Entrance{
     }
 
 
-    public void retrieveParameters(String[] args, MongoDatabase database) {
+    public void retrieveParameters(String[] args, MongoDatabase db) {
         CommandLineParser parser = new DefaultParser();
         try {
             CommandLine line = parser.parse(options, args);
@@ -72,6 +78,9 @@ public class Entrance{
 
             if( line.hasOption( "i" ) ) {
                 inputFile =line.getOptionValue("i");
+            }
+            if( line.hasOption( "c" ) ) {
+                collection =line.getOptionValue("c");
             }
 
         }
@@ -85,12 +94,11 @@ public class Entrance{
             System.exit(0);
         }
         if (app.equals(AppNames.ShowVars.getName())) {
-            String[] news = {this.inputFile, this.outputFileDirS, this.sampleInformationFileS, this.library};
-            new ShowVars();
+            new ShowVars(db, this.collection);
         }
         else if (app.equals(AppNames.ShowColl.getName())) {
             String[] news ={this.inputFile,this.outputFileDirS,this.QCmethod,this.readsNumber};
-            new ShowColl(database);
+            new ShowColl(db);
         }
         else if (app.equals(AppNames.Download.getName())) {
             String[] news ={this.inputFile,this.outputFileDirS,this.QCmethod,this.readsNumber};
