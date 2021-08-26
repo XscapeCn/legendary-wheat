@@ -20,6 +20,11 @@ public enum AppNames implements Comparable <AppNames> {
     ShowVars ("ShowVars"),
 
     /**
+     * Query the document
+     */
+    Query ("Query"),
+
+    /**
      * Download the update table
      */
     UpdateTable ("UpdateTable"),

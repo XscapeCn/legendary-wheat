@@ -19,6 +19,7 @@ import org.apache.commons.cli.Options;
 
 public class Entrance{
     String collection = null;
+    String query = null;
 
 
 
@@ -26,14 +27,9 @@ public class Entrance{
     HelpFormatter optionFormat = new HelpFormatter();
     String introduction = this.createIntroduction();
     String app = null;
-    String parameterPath = null;
-    String parameters = null;
 
     String inputFile = null;
     String outputFileDirS=null;
-    String sampleInformationFileS = null;
-    String library = null;
-    String GTFDir = null;
     String QCmethod = null;
     String readsNumber = null;
 
@@ -52,6 +48,9 @@ public class Entrance{
         options = new Options();
         options.addOption("a", true, "App. e.g. -a Parsing");
         options.addOption("c", true, "collection. e.g. -c germplasm");
+        options.addOption("q", true, "query format. e.g. -q ploidy:6,SeedStorage:1");
+
+
         options.addOption("f", true, "Parameter file path of an app. e.g. parameter_Alignment.txt");
         options.addOption("i", true, "-inputFile /User/bin/");
         options.addOption("o", true, "-outputFileDirS /User/bin/");
@@ -76,6 +75,9 @@ public class Entrance{
             if( line.hasOption( "c" ) ) {
                 collection =line.getOptionValue("c");
             }
+            if( line.hasOption( "q" ) ) {
+                query =line.getOptionValue("q");
+            }
 
         }
         catch(Exception e) {
@@ -93,6 +95,10 @@ public class Entrance{
         else if (app.equals(AppNames.ShowColl.getName())) {
             String[] news ={this.inputFile,this.outputFileDirS,this.QCmethod,this.readsNumber};
             new ShowColl(db);
+        }
+        else if (app.equals(AppNames.Query.getName())) {
+            String[] news ={this.inputFile,this.outputFileDirS,this.QCmethod,this.readsNumber};
+            new Query(db, this.query);
         }
         else if (app.equals(AppNames.Download.getName())) {
             String[] news ={this.inputFile,this.outputFileDirS,this.QCmethod,this.readsNumber};

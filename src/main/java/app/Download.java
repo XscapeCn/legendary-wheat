@@ -78,8 +78,6 @@ public class Download {
     }
 
     public void print(FindIterable<Document> iterDoc, Set<String> keys){
-
-
         for (Document doc:iterDoc) {
             Collection<Object> values = doc.values();
             for (Object obj : values) {
