@@ -42,16 +42,10 @@ public class Entrance{
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase db = mongoClient.getDatabase("test");
             MongoCollection<Document> collection = db.getCollection("new");
-
             Document doc = collection.find().first();
-
-
             this.createOptions();
             this.retrieveParameters (args, db);
-
         }
-
-
     }
 
     public void createOptions() {
@@ -102,7 +96,7 @@ public class Entrance{
         }
         else if (app.equals(AppNames.Download.getName())) {
             String[] news ={this.inputFile,this.outputFileDirS,this.QCmethod,this.readsNumber};
-            new Download();
+            new Download(db, this.collection);
         }
         else {
             System.out.println("App does not exist");

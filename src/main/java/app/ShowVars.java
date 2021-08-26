@@ -9,13 +9,13 @@ import org.bson.Document;
 import java.util.*;
 
 public class ShowVars {
-    public ShowVars(MongoDatabase db, String coll){
+    public Set<String> keys;
 
+    public ShowVars(MongoDatabase db, String coll){
         MongoCollection<Document> collection = db.getCollection(coll);
         Document first = collection.find().first();
-        List<String> filedKeys = new ArrayList<>();
-
-        Set<String> keys = first.keySet();
+//        List<String> filedKeys = new ArrayList<>();
+        keys = first.keySet();
         StringBuilder sb = new StringBuilder();
 
         for (String key : keys) {
