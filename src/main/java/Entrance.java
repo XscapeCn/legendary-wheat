@@ -49,8 +49,6 @@ public class Entrance{
         options.addOption("a", true, "App. e.g. -a Parsing");
         options.addOption("c", true, "collection. e.g. -c germplasm");
         options.addOption("q", true, "query format. e.g. -q ploidy:6,SeedStorage:1");
-
-
         options.addOption("f", true, "Parameter file path of an app. e.g. parameter_Alignment.txt");
         options.addOption("i", true, "-inputFile /User/bin/");
         options.addOption("o", true, "-outputFileDirS /User/bin/");
@@ -61,7 +59,6 @@ public class Entrance{
         options.addOption("m",true,"method mean or median");
         options.addOption("r",true,"readsNumber");
     }
-
 
     public void retrieveParameters(String[] args, MongoDatabase db) {
         CommandLineParser parser = new DefaultParser();
@@ -78,7 +75,6 @@ public class Entrance{
             if( line.hasOption( "q" ) ) {
                 query =line.getOptionValue("q");
             }
-
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -109,7 +105,6 @@ public class Entrance{
             this.printIntroductionAndUsage();
             System.exit(0);
         }
-
     }
 
     public void printIntroductionAndUsage() {
