@@ -105,6 +105,8 @@ public class Entrance{
             this.printIntroductionAndUsage();
             System.exit(0);
         }
+
+        new ReadLog(db, args);
     }
 
     public void printIntroductionAndUsage() {
