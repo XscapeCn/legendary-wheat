@@ -1,5 +1,3 @@
-package app;
-
 import java.util.Date;
 
 public class test {
@@ -7,12 +5,11 @@ public class test {
 
         String str = "/data1/home/songxu";
         String[] split = str.split("/");
-        for (int i = 0; i < split.length; i++) {
-            System.out.println(split[i]);
-            System.out.println(i);
 
+//        System.out.println(split[0]);
+        if (split[0].equals("")){
+            System.out.println(1);
         }
-        System.out.println(split[1]);
 
     }
 }
