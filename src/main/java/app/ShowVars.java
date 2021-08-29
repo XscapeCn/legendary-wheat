@@ -24,6 +24,19 @@ public class ShowVars {
         System.out.println(sb.toString());
     }
 
+    public ShowVars(MongoDatabase db, String coll, String regex){
+        MongoCollection<Document> collection = db.getCollection(coll);
+        Document first = collection.find().first();
+//        List<String> filedKeys = new ArrayList<>();
+        keys = first.keySet();
+        StringBuilder sb = new StringBuilder();
+
+        for (String key : keys) {
+            sb.append(key).append(regex);
+        }
+        System.out.println(sb.toString());
+    }
+
 
 //    public static void main(String[] args) {
 //        String uri = "mongodb://localhost:27017";

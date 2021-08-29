@@ -7,7 +7,8 @@ public class ShowColl {
     public ShowColl(MongoDatabase db){
         MongoIterable<String> collectionNames = db.listCollectionNames();
         for (String str: collectionNames) {
-            System.out.println(str);
+            if (!str.equals("log")){System.out.println(str);
+            }
         }
     }
 }

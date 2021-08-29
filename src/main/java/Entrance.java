@@ -20,54 +20,78 @@ import org.apache.commons.cli.Options;
 public class Entrance{
     String collection = null;
     String query = null;
-
-
-
+    String database = "germplasm";
     Options options = new Options();
-    HelpFormatter optionFormat = new HelpFormatter();
     String introduction = this.createIntroduction();
     String app = null;
 
-    String inputFile = null;
-    String outputFileDirS=null;
-    String QCmethod = null;
-    String readsNumber = null;
-
     public Entrance (String[] args) {
+        this.createOptions();
+        this.retrieveParameters (args);
+
         String uri = "mongodb://localhost:27017";
         try (MongoClient mongoClient = MongoClients.create(uri)) {
-            MongoDatabase db = mongoClient.getDatabase("test");
-            MongoCollection<Document> collection = db.getCollection("new");
-            Document doc = collection.find().first();
-            this.createOptions();
-            this.retrieveParameters (args, db);
+            MongoDatabase db = mongoClient.getDatabase("germplasm");
+//            MongoCollection<Document> collection = db.getCollection(this.collection);
+            runApp(db, args);
         }
     }
 
     public void createOptions() {
         options = new Options();
         options.addOption("a", true, "App. e.g. -a Parsing");
-        options.addOption("c", true, "collection. e.g. -c germplasm");
+        options.addOption("c", true, "collection. e.g. -c inventory");
+        options.addOption("d", true, "database. e.g. -d germplasm");
         options.addOption("q", true, "query format. e.g. -q ploidy:6,SeedStorage:1");
-        options.addOption("f", true, "Parameter file path of an app. e.g. parameter_Alignment.txt");
-        options.addOption("i", true, "-inputFile /User/bin/");
-        options.addOption("o", true, "-outputFileDirS /User/bin/");
-        options.addOption("s", true, "-sampleInformationFileS /User/bin/");
-        options.addOption("l", true, "-library /User/bin/");
-        options.addOption("app", true, "-anno /User/bin/");
-        options.addOption("t", true, "-t 32");
-        options.addOption("m",true,"method mean or median");
-        options.addOption("r",true,"readsNumber");
+//        options.addOption("f", true, "Parameter file path of an app. e.g. parameter_Alignment.txt");
+//        options.addOption("i", true, "-inputFile /User/bin/");
+//        options.addOption("o", true, "-outputFileDirS /User/bin/");
+//        options.addOption("s", true, "-sampleInformationFileS /User/bin/");
+//        options.addOption("l", true, "-library /User/bin/");
+//        options.addOption("app", true, "-anno /User/bin/");
+//        options.addOption("t", true, "-t 32");
+//        options.addOption("m",true,"method mean or median");
+//        options.addOption("r",true,"readsNumber");
     }
 
-    public void retrieveParameters(String[] args, MongoDatabase db) {
+    public void runApp(MongoDatabase db,String[] args){
+        if (app == null) {
+            System.out.println("App does not exist");
+            this.printIntroductionAndUsage();
+            System.exit(0);
+        }
+        if (app.equals(AppNames.ShowVars.getName())) {
+            new ShowVars(db, this.collection);
+        }
+        else if (app.equals(AppNames.ShowColl.getName())) {
+
+            new ShowColl(db);
+        }
+        else if (app.equals(AppNames.Query.getName())) {
+
+            new Query(db,this.collection,this.query);
+        }
+        else if (app.equals(AppNames.Download.getName())) {
+
+            new Download(db, this.collection);
+        }
+        else {
+            System.out.println("App does not exist");
+            this.printIntroductionAndUsage();
+            System.exit(0);
+        }
+
+        new ReadLog(db, args);
+    }
+
+    public void retrieveParameters(String[] args) {
         CommandLineParser parser = new DefaultParser();
         try {
             CommandLine line = parser.parse(options, args);
             app = line.getOptionValue("a");
 
-            if( line.hasOption( "i" ) ) {
-                inputFile =line.getOptionValue("i");
+            if( line.hasOption( "d" ) ) {
+                database =line.getOptionValue("d");
             }
             if( line.hasOption( "c" ) ) {
                 collection =line.getOptionValue("c");
@@ -80,33 +104,6 @@ public class Entrance{
             e.printStackTrace();
             System.exit(0);
         }
-        if (app == null) {
-            System.out.println("App does not exist");
-            this.printIntroductionAndUsage();
-            System.exit(0);
-        }
-        if (app.equals(AppNames.ShowVars.getName())) {
-            new ShowVars(db, this.collection);
-        }
-        else if (app.equals(AppNames.ShowColl.getName())) {
-            String[] news ={this.inputFile,this.outputFileDirS,this.QCmethod,this.readsNumber};
-            new ShowColl(db);
-        }
-        else if (app.equals(AppNames.Query.getName())) {
-            String[] news ={this.inputFile,this.outputFileDirS,this.QCmethod,this.readsNumber};
-            new Query(db, this.query);
-        }
-        else if (app.equals(AppNames.Download.getName())) {
-            String[] news ={this.inputFile,this.outputFileDirS,this.QCmethod,this.readsNumber};
-            new Download(db, this.collection);
-        }
-        else {
-            System.out.println("App does not exist");
-            this.printIntroductionAndUsage();
-            System.exit(0);
-        }
-
-        new ReadLog(db, args);
     }
 
     public void printIntroductionAndUsage() {
@@ -129,10 +126,8 @@ public class Entrance{
     }
 
     public static void main (String[] args) {
-
         new Entrance(args);
     }
-
 }
 
 

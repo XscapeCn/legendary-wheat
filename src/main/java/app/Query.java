@@ -12,8 +12,9 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 public class Query {
-    public Query(MongoDatabase db, String str) {
-        MongoCollection<Document> collection = db.getCollection("new");
+    public Query(MongoDatabase db, String coll, String str) {
+        MongoCollection<Document> collection = db.getCollection(coll);
+        new ShowVars(db, coll,",");
         Bson filter = buildBson(checkFilter(splitQuery(str)));
         FindIterable<Document> documents = collection.find(filter);
         for (Document doc : documents) {
@@ -72,20 +73,20 @@ public class Query {
         }
         return res;
     }
-
-    public static void main(String[] args) {
-//        boolean creatable = NumberUtils.isCreatable(str);
-        String uri = "mongodb://localhost:27017";
-        try (MongoClient mongoClient = MongoClients.create(uri)) {
-            MongoDatabase db = mongoClient.getDatabase("test");
-            MongoCollection<Document> collection = db.getCollection("new");
-//            FindIterable<Document> documents = collection.find(eq("Elevalution(m)", 359.0000));
-//            for (Document doc : documents) {
-//                Collection<Object> values = doc.values();
-//                System.out.println(values);
-//            }
-            new Query(db, "BamDatabaseID:TW0055,Elevalution(m):359.0,TreeValidatedGroupbySubspecies:Landrace,Latitude:36.7089");
-//            new Query(db, "_id:6124a49802a7b5eb2a9df80c");
-        }
-    }
+//
+//    public static void main(String[] args) {
+////        boolean creatable = NumberUtils.isCreatable(str);
+//        String uri = "mongodb://localhost:27017";
+//        try (MongoClient mongoClient = MongoClients.create(uri)) {
+//            MongoDatabase db = mongoClient.getDatabase("test");
+//            MongoCollection<Document> collection = db.getCollection("new");
+////            FindIterable<Document> documents = collection.find(eq("Elevalution(m)", 359.0000));
+////            for (Document doc : documents) {
+////                Collection<Object> values = doc.values();
+////                System.out.println(values);
+////            }
+//            new Query(db, "BamDatabaseID:TW0055,Elevalution(m):359.0,TreeValidatedGroupbySubspecies:Landrace,Latitude:36.7089");
+////            new Query(db, "_id:6124a49802a7b5eb2a9df80c");
+//        }
+//    }
 }
