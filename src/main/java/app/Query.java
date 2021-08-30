@@ -19,7 +19,11 @@ public class Query {
         FindIterable<Document> documents = collection.find(filter);
         for (Document doc : documents) {
             Collection<Object> values = doc.values();
-            System.out.println(values);
+            for (Object obj:
+                 values) {
+                System.out.print(obj + ",");
+            }
+            System.out.print("/n");
         }
     }
 
@@ -63,11 +67,10 @@ public class Query {
         for (Object[] obj : query) {
             List<Object> temp = new ArrayList<>();
             temp.add((String) obj[0]);
-            if (NumberUtils.isCreatable((String) obj[1])){
-                double v = Double.parseDouble((String) obj[1]);
-                temp.add(v);
-            }else {
+            if (!NumberUtils.isCreatable((String) obj[1])){
                 temp.add(obj[1]);
+            }else {
+                temp.add(Double.parseDouble((String) obj[1]));
             }
             res.add(temp);
         }

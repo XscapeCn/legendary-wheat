@@ -30,6 +30,11 @@ public enum AppNames implements Comparable <AppNames> {
     UpdateTable ("UpdateTable"),
 
     /**
+     * Download the update table
+     */
+    DownTable ("DownTable"),
+
+    /**
      * Download the whole database
      */
     Download ("Download"),

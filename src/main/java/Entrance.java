@@ -67,6 +67,10 @@ public class Entrance{
 
             new ShowColl(db);
         }
+        else if (app.equals(AppNames.DownTable.getName())) {
+
+            new DownTable(db, collection);
+        }
         else if (app.equals(AppNames.Query.getName())) {
 
             new Query(db,this.collection,this.query);
