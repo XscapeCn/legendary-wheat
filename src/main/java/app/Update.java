@@ -1,6 +1,5 @@
 package app;
 
-
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -126,14 +125,14 @@ public class Update {
         }
     }
 
-    public static void main(String[] args) {
-
-        String uri = "mongodb://localhost:27017";
-        try (MongoClient mongoClient = MongoClients.create(uri)) {
-            MongoDatabase db = mongoClient.getDatabase("test");
-            String coll = "germGeo";
-            String file = "D:/Desktop/GFGsheet.xlsx";
-            new Update(db, coll, file);
-        }
-    }
+//    public static void main(String[] args) {
+//
+//        String uri = "mongodb://localhost:27017";
+//        try (MongoClient mongoClient = MongoClients.create(uri)) {
+//            MongoDatabase db = mongoClient.getDatabase("test");
+//            String coll = "germGeo";
+//            String file = "D:/Desktop/GFGsheet.xlsx";
+//            new Update(db, coll, file);
+//        }
+//    }
 }

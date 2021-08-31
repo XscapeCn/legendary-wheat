@@ -5,7 +5,6 @@ import com.mongodb.DBObject;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Projections;
 import org.bson.Document;
-
 import java.util.*;
 
 public class ShowVars {
@@ -14,7 +13,6 @@ public class ShowVars {
     public ShowVars(MongoDatabase db, String coll){
         MongoCollection<Document> collection = db.getCollection(coll);
         Document first = collection.find().first();
-//        List<String> filedKeys = new ArrayList<>();
         keys = first.keySet();
         StringBuilder sb = new StringBuilder();
 
@@ -36,7 +34,6 @@ public class ShowVars {
         }
         System.out.println(sb.toString());
     }
-
 
 //    public static void main(String[] args) {
 //        String uri = "mongodb://localhost:27017";

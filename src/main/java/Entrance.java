@@ -4,17 +4,13 @@ import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-
 import java.io.File;
-
 import app.*;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
-
 
 
 public class Entrance{
@@ -31,7 +27,7 @@ public class Entrance{
 
         String uri = "mongodb://localhost:27017";
         try (MongoClient mongoClient = MongoClients.create(uri)) {
-            MongoDatabase db = mongoClient.getDatabase("germplasm");
+            MongoDatabase db = mongoClient.getDatabase(database);
 //            MongoCollection<Document> collection = db.getCollection(this.collection);
             runApp(db, args);
         }
@@ -43,15 +39,6 @@ public class Entrance{
         options.addOption("c", true, "collection. e.g. -c inventory");
         options.addOption("d", true, "database. e.g. -d germplasm");
         options.addOption("q", true, "query format. e.g. -q ploidy:6,SeedStorage:1");
-//        options.addOption("f", true, "Parameter file path of an app. e.g. parameter_Alignment.txt");
-//        options.addOption("i", true, "-inputFile /User/bin/");
-//        options.addOption("o", true, "-outputFileDirS /User/bin/");
-//        options.addOption("s", true, "-sampleInformationFileS /User/bin/");
-//        options.addOption("l", true, "-library /User/bin/");
-//        options.addOption("app", true, "-anno /User/bin/");
-//        options.addOption("t", true, "-t 32");
-//        options.addOption("m",true,"method mean or median");
-//        options.addOption("r",true,"readsNumber");
     }
 
     public void runApp(MongoDatabase db,String[] args){
@@ -64,19 +51,15 @@ public class Entrance{
             new ShowVars(db, this.collection);
         }
         else if (app.equals(AppNames.ShowColl.getName())) {
-
             new ShowColl(db);
         }
         else if (app.equals(AppNames.DownTable.getName())) {
-
-            new DownTable(db, collection);
+            new DownTable(db, this.collection);
         }
         else if (app.equals(AppNames.Query.getName())) {
-
             new Query(db,this.collection,this.query);
         }
         else if (app.equals(AppNames.Download.getName())) {
-
             new Download(db, this.collection);
         }
         else {
@@ -84,12 +67,12 @@ public class Entrance{
             this.printIntroductionAndUsage();
             System.exit(0);
         }
-
         new ReadLog(db, args);
     }
 
     public void retrieveParameters(String[] args) {
         CommandLineParser parser = new DefaultParser();
+        HelpFormatter hf = new HelpFormatter();
         try {
             CommandLine line = parser.parse(options, args);
             app = line.getOptionValue("a");
@@ -105,6 +88,7 @@ public class Entrance{
             }
         }
         catch(Exception e) {
+            hf.printHelp("LW", options, true);
             e.printStackTrace();
             System.exit(0);
         }
@@ -118,14 +102,14 @@ public class Entrance{
     public String createIntroduction() {
         StringBuilder sb = new StringBuilder();
         sb.append("\nLegendary-wheat is designed to make wheat germplasm contraction easier.\n");
-        sb.append("It uses two options to run its apps. \"-a\" is used to select an app. \"-f\" is used to provide a parameter file of an app.\n");
+        sb.append("It uses at least options to run its apps. \"-a\" is used to select an app.\n");
         sb.append("e.g. The basic function of it shows below: ");
-        sb.append("java -Xmx100g -jar SiPAS-tools.jar -a Parsing -f parameter_parsing.txt > log.txt &\n");
-        sb.append("\nAvailable apps in SiPAS-tools include,\n");
+        sb.append("java -Xmx100g -jar LW.jar -a Query -q GID:ABD00001\n");
+        sb.append("\nAvailable apps in LW include,\n");
         for (int i = 0; i < AppNames.values().length; i++) {
             sb.append(AppNames.values()[i].getName()).append("\n");
         }
-        sb.append("\nPlease visit https://github.com/PlantGeneticsLab/SiPAS-tools for details.\n");
+        sb.append("\nPlease visit https://github.com/XscapeCn/legendary-wheat for details.\n");
         return sb.toString();
     }
 

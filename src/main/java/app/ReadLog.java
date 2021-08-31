@@ -55,7 +55,6 @@ public class ReadLog {
     }
 
     public void addToDb(MongoDatabase db){
-        String uri = "mongodb://localhost:27017";
         MongoCollection<Document> collection = db.getCollection("log");
 
         try {

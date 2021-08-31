@@ -59,12 +59,12 @@ public class DownTable {
         }
     }
 
-    public static void main(String[] args) {
-        String uri = "mongodb://localhost:27017";
-        try (MongoClient mongoClient = MongoClients.create(uri)) {
-            MongoDatabase db = mongoClient.getDatabase("test");
-//            MongoCollection<Document> collection = db.getCollection(this.collection);
-            new DownTable(db, "germGeo");
-        }
-    }
+//    public static void main(String[] args) {
+//        String uri = "mongodb://localhost:27017";
+//        try (MongoClient mongoClient = MongoClients.create(uri)) {
+//            MongoDatabase db = mongoClient.getDatabase("test");
+////            MongoCollection<Document> collection = db.getCollection(this.collection);
+//            new DownTable(db, "germGeo");
+//        }
+//    }
 }
