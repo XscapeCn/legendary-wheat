@@ -6,18 +6,11 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.InsertManyResult;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-
 import java.io.*;
-import java.nio.channels.SelectableChannel;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Update {
     List<String> field = new ArrayList<>();
@@ -30,15 +23,12 @@ public class Update {
         readUpdate(str);
         checkVar();
 
-        for (List<Object> obj: res
-             ) {
+        for (List<Object> obj: res) {
             System.out.println("=========");
-            for (Object a: obj
-                 ) {
+            for (Object a: obj) {
                 System.out.println(a);
             }
         }
-
         insertToDb();
     }
 
@@ -83,7 +73,6 @@ public class Update {
     }
 
     public void checkVar(){
-
         //check if some value such as "GID" existed in the db
         Document first = this.collection.find().first();
         assert first != null;
@@ -124,7 +113,6 @@ public class Update {
                     temp.add(cell);
 //                            data.append(cell + ",");
             }
-
         }
         res.add(temp);
         temp = new ArrayList<>();
@@ -145,10 +133,7 @@ public class Update {
             MongoDatabase db = mongoClient.getDatabase("test");
             String coll = "germGeo";
             String file = "D:/Desktop/GFGsheet.xlsx";
-
             new Update(db, coll, file);
-
         }
     }
-
 }
